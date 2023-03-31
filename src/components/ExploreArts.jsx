@@ -37,57 +37,25 @@ const AddartCollectionss = ({ currentAccount }) => {
     // }, []);
 
 
+
     const [resalePrice, updateresalePrice] = useState({ price: '' })
     const [nfts, setNfts] = useState([])
     const [loadingState, setLoadingState] = useState('not-loaded')
     const [hhnfts, hhsetNfts] = useState([])
-    const [nftData, setNftData] = useState([]);
     const [tokenId, settokenId] = useState([]);
     const [price, setprice] = useState([]);
     const [image, setImage] = useState([]);
+    const [nftData, setNftData] = useState([]);
 
-    console.log(nftData);
-    // console.log(nftData.name);
 
+    let fetchNftsData = undefined;
+    let fetching;
     // useEffect(() => {
     //     // connectUser();
     //     getAllNFTs();
     // }, [nfts])
 
-    // async function connectUser() {
-    //     if (window.ethereum) {
-    //         var web3 = new Web3(window.ethereum);
-    //         await window.ethereum.send('eth_requestAccounts');
-    //         var accounts = await web3.eth.getAccounts();
-    //         var account = accounts[0];
-    //     }
-    //     getUser(account)
-    // }
 
-    // async function loadNewSaleNFTs() {
-    //     const hhPrivkey = simpleCrypto.decrypt(cipherHH)
-    //     const provider = new ethers.providers.JsonRpcProvider(mainnet)
-    //     const wallet = new ethers.Wallet(hhPrivkey, provider);
-    //     const tokenContract = new ethers.Contract(EMNAddress, EMN, wallet)
-    //     const marketContract = new ethers.Contract(EMNMarketAddress, EMNMarket, wallet)
-    //     const data = await marketContract.getAvailableNft()
-    //     const items = await Promise.all(data.map(async i => {
-    //         const tokenUri = await tokenContract.tokenURI(i.tokenId)
-    //         const meta = await axios.get(tokenUri)
-    //         let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-    //         let item = {
-    //             price,
-    //             tokenId: i.tokenId.toNumber(),
-    //             seller: i.seller,
-    //             owner: i.owner,
-    //             image: meta.data.image,
-    //             name: meta.data.name,
-    //             description: meta.data.description,
-    //         }
-    //         return item
-    //     }))
-    //     hhsetNfts(items)
-    // }
 
 
     function getAccessToken() {
@@ -97,18 +65,6 @@ const AddartCollectionss = ({ currentAccount }) => {
     function makeStorageClient() {
         return new Web3Storage({ token: getAccessToken() })
     }
-
-    // async function buyNewNft(nft) {
-    //     const provider = new ethers.providers.JsonRpcProvider();
-    //     const signer = provider.getSigner();
-    //     const contract = new ethers.Contract(cipherHH, MarketAddressMumbai, signer);
-
-    //     const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
-    //     const transaction = await contract.EMNMarket(nft.nftContract, nft.tokenId, {
-    //         value: price
-    //     })
-    //     await transaction.wait();
-    // }
 
 
     useEffect(() => {
@@ -128,13 +84,38 @@ const AddartCollectionss = ({ currentAccount }) => {
         itemArray = await contract.getAvailableNft();
         // const data = await contract.getAvailableNft();
 
-        const items = await itemArray.map(async i => {
+
+        console.log(itemArray);
+
+
+
+        // itemArray.map(async i => {
+        //     const tokenContractAddress = i.nftContract;
+        //     const tokenContract = new ethers.Contract(tokenContractAddress, DemoMint.abi, signer);
+
+        //     console.log(i.tokenId);
+
+        //     let id = i.tokenId
+        //     let tokenUri = (await tokenContract.tokenURI(id)).replace('ipfs://', 'https://ipfs.io/ipfs/');
+        //     let resp;
+
+
+        //     fetchNftsData = await axios.get(tokenUri);
+        //     console.log(fetchNftsData.data);
+
+        //     if (fetchNftsData.status === 200) {
+        //         return fetching
+
+        //     }
+
+        // })
+
+
+
+
+        const items = itemArray.map(async i => {
             const tokenContractAddress = await i.nftContract;
             const tokenContract = new ethers.Contract(tokenContractAddress, DemoMint.abi, signer);
-            // const tokenUri = await tokenContract.tokenURI(i.tokenId);
-            // let rawUri = tokenContract.tokenURI(i.tokenId).catch(function (error) {
-            //     console.log("tokens filtered");
-            // });
 
             const tokenUri = (await tokenContract.tokenURI(i.tokenId)).replace('ipfs://', 'https://ipfs.io/ipfs/');
 
@@ -146,6 +127,7 @@ const AddartCollectionss = ({ currentAccount }) => {
             console.log(data);
             console.log(typeof (data))
             setNftData(data)
+            console.log(nftData);
 
             let img = data.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
             console.log(img);
@@ -169,154 +151,15 @@ const AddartCollectionss = ({ currentAccount }) => {
 
             let meta = JSON.stringify(metadata);
             console.log(meta);
-
-            // const client = makeStorageClient();
-            // const res = await client.get(tokenUri);
-            // console.log(`Got a response! [${res.status}] ${res.statusText}`);
-            // if (!res.ok) {
-            //     throw new Error(`failed to get ${tokenUri}`);
-            // }
+        })
 
 
-            // fetch(rawUri, {
-            //     method: 'GET',
-            //     headers: {
-            //         "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
-            //     },
-            //     credentials: 'include',
-            // })
-            //     .then(res => {
-            //         console.log(res);
-            //         console.log(res.name)
-            //     })
-            //     .catch(err => {
-            //         // Handle errors 
-            //     })
-
-
-
-            // Uri.then(value => {
-            //     let str = value
-            //     let cleanUri = str.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            //     console.log(cleanUri)
-            //     let metadata = axios.get(cleanUri).catch(function (error) {
-            //         console.log(error.toJSON());
-            //     });
-            //     console.log(metadata);
-
-            //     let rawImg = value.data.image;
-            //     var name = value.data.name;
-            //     var desc = value.data.description;
-            //     let image = rawImg.replace('ipfs://', 'https://ipfs.io/ipfs/');
-            //     Promise.resolve().then(value => {
-            //         let ownerW = value;
-            //         let meta = [{
-            //             name: name,
-            //             img: image,
-            //             tokenId: i.tokenId,
-            //             wallet: ownerW,
-            //             desc,
-            //         }];
-            //         console.log(meta);
-            //         meta = JSON.stringify(meta);
-            //     })
-
-            //     // return metadata;
-            // })
-
-
-            // getUri.then(value => {
-            //     let rawImg = value.data.image;
-            //     var name = value.data.name;
-            //     var desc = value.data.description;
-            //     let image = rawImg.replace('ipfs://', 'https://ipfs.io/ipfs/');
-            //     Promise.resolve().then(value => {
-            //         let ownerW = value;
-            //         let meta = [{
-            //             name: name,
-            //             img: image,
-            //             tokenId: i.tokenId,
-            //             wallet: ownerW,
-            //             desc,
-            //         }];
-            //         console.log(meta);
-            //         meta = JSON.stringify(meta);
-            //     })
-            // })
-
-
-            // const meta = await axios.get(tokenUri);
-            // let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-            // let item = {
-            //     price,
-            //     tokenId: i.tokenId.toNumber(),
-            //     seller: i.seller,
-            //     owner: i.owner,
-            //     image: meta.data.image,
-            //     name: meta.data.name,
-            //     description: meta.data.description,
-            // };
-            // return item
-        });
 
         setNfts(items);
+        console.log(items);
         setLoadingState('loaded');
+
     }
-
-    // async function getWalletNFTs() {
-    //     const provider = new ethers.providers.JsonRpcProvider(mainnet)
-    //     const key = simpleCrypto.decrypt(cipherHH)
-    //     const wallet = new ethers.Wallet(key, provider);
-    //     const contract = new ethers.Contract(EMNAddressGoerli, EMN1, wallet);
-    //     const itemArray = [];
-    //     contract.totalSupply().then(result => {
-    //         let totalSup = parseInt(result, 16)
-    //         for (let i = 0; i < totalSup; i++) {
-    //             var token = i + 1
-    //             const owner = contract.ownerOf(token).catch(function (error) {
-    //                 console.log("tokens filtered");
-    //             });
-    //             const rawUri = contract.tokenURI(token).catch(function (error) {
-    //                 console.log("tokens filtered");
-    //             });
-    //             const Uri = Promise.resolve(rawUri)
-
-    //             const getUri = Uri.then(value => {
-    //                 let str = value
-    //                 let cleanUri = str.replace('ipfs://', 'https://ipfs.io/ipfs/')
-    //                 console.log(cleanUri)
-    //                 let metadata = axios.get(cleanUri).catch(function (error) {
-    //                     console.log(error.toJSON());
-    //                 });
-    //                 return metadata;
-    //             })
-    //             getUri.then(value => {
-    //                 let rawImg = value.data.image
-    //                 var name = value.data.name
-    //                 var desc = value.data.description
-    //                 let image = rawImg.replace('ipfs://', 'https://ipfs.io/ipfs/')
-    //                 Promise.resolve(owner).then(value => {
-    //                     let ownerW = value;
-    //                     let meta = {
-    //                         name: name,
-    //                         img: image,
-    //                         tokenId: token,
-    //                         wallet: ownerW,
-    //                         desc,
-    //                     }
-    //                     console.log(meta)
-    //                     itemArray.push(meta)
-    //                 })
-    //             })
-    //         }
-    //     })
-    //     await new Promise(r => setTimeout(r, 3000));
-    //     setNfts(itemArray)
-    //     setLoadingState('loaded');
-    // }
-
-
-
 
 
 
@@ -324,15 +167,10 @@ const AddartCollectionss = ({ currentAccount }) => {
 
     const IsLoggedIn = window.localStorage.getItem("userLoggedIn");
     if (IsLoggedIn !== "true") {
-
         return <Redirect to="/user/login" />;
     }
 
 
-    //  else
-    //  {
-    //     window.location.href="" 
-    //  }
 
 
 
@@ -350,11 +188,11 @@ const AddartCollectionss = ({ currentAccount }) => {
                             <div className="col-sm-12" align="center">
                                 <h1 className="m-0 text-light">Explore Art Collections</h1>
                             </div>
-                            <div className="mt-5">
+                            {/* <div className="mt-5">
                                 <Button className="m-0 bg-blue text-light" onClick={getAllNFTs} >
                                     Refresh to see new new collection
                                 </Button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

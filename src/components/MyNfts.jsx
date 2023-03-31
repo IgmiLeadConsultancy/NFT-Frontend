@@ -4,10 +4,23 @@ import AsideBar from "./common/Asidebar2";
 import { BASE_API_URL } from "../variables";
 import DataTable from "react-data-table-component";
 
+import { BscMarketAddress, BscMintAddress, MintAddressMumbai, MarketAddressMumbai, mumbaiRpc, bscRpc } from "../config/constants";
+import detectEthereumProvider from "@metamask/detect-provider";
+import Mint from "../config/Mint.json";
+import Marketplace from "../config/Marketplace.json";
+
 
 function MyNfts() {
 
     const [userData, setuserData] = useState("");
+    const [nft, setNft] = useState([]);
+
+
+    const getUserNfts = () => {
+
+    }
+
+
 
     const GetUserDetails = () => {
         fetch(`${BASE_API_URL}/userData`, {
@@ -144,7 +157,7 @@ function MyNfts() {
                                         <div className="editor">
                                             <div className="col-md-12">
                                                 <DataTable
-                                                    title="Ny Nfts "
+                                                    title="My Nfts "
                                                     pagination
                                                     fixedHeader
                                                     selectableRows
