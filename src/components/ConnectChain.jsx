@@ -58,6 +58,7 @@ const ConnectChain = () => {
         var mum = "Mumbai";
         var goe = "Goerli";
         var bsc = "BscTest"
+        console.log(selectedValue);
         if (poly === selectedValue) {
             maticChain();
         } else if (eth === selectedValue) {
@@ -84,21 +85,11 @@ const ConnectChain = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu >
-                    <Dropdown.Item key="Ethereum">
-                        <button onClick={ethChain}>Ethereum Mainnet</button>
-                    </Dropdown.Item>
-                    <Dropdown.Item key="Polygon">
-                        <button onClick={maticChain}>Polygon Mainnet</button>
-                    </Dropdown.Item>
-                    <Dropdown.Item key="Goerli">
-                        <button onClick={goerliTestnet}>Goerli</button>
-                    </Dropdown.Item>
-                    <Dropdown.Item key="Mumbai">
-                        <button onClick={maticTestnet}>Mumbai</button>
-                    </Dropdown.Item>
-                    <Dropdown.Item key="BscTest">
-                        <button onClick={bscTest}>Bsc Testnet</button>
-                    </Dropdown.Item>
+                    <button onClick={ethChain} onSelectCapture={e => setSelected("Ethereum")}>Ethereum Mainnet</button>
+                    <button onClick={maticChain}>Polygon Mainnet</button>
+                    <button onClick={goerliTestnet}>Goerli</button>
+                    <button onClick={maticTestnet}>Mumbai</button>
+                    <button onClick={bscTest}>Bsc Testnet</button>
                 </Dropdown.Menu>
             </Dropdown>
         </div>
