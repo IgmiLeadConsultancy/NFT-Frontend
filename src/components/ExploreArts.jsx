@@ -48,8 +48,6 @@ const AddartCollectionss = ({ currentAccount }) => {
     const [nftData, setNftData] = useState([]);
 
 
-    let fetchNftsData = undefined;
-    let fetching;
     // useEffect(() => {
     //     // connectUser();
     //     getAllNFTs();
@@ -89,79 +87,79 @@ const AddartCollectionss = ({ currentAccount }) => {
 
 
 
-        // itemArray.map(async i => {
-        //     const tokenContractAddress = i.nftContract;
-        //     const tokenContract = new ethers.Contract(tokenContractAddress, DemoMint.abi, signer);
-
-        //     console.log(i.tokenId);
-
-        //     let id = i.tokenId
-        //     let tokenUri = (await tokenContract.tokenURI(id)).replace('ipfs://', 'https://ipfs.io/ipfs/');
-        //     let resp;
-
-
-        //     fetchNftsData = await axios.get(tokenUri);
-        //     console.log(fetchNftsData.data);
-
-        //     if (fetchNftsData.status === 200) {
-        //         return fetching
-
-        //     }
-
-        // })
-
-
-
-
-        const items = itemArray.map(async i => {
-            const tokenContractAddress = await i.nftContract;
+        itemArray.map(async i => {
+            const tokenContractAddress = i.nftContract;
             const tokenContract = new ethers.Contract(tokenContractAddress, DemoMint.abi, signer);
 
-            const tokenUri = (await tokenContract.tokenURI(i.tokenId)).replace('ipfs://', 'https://ipfs.io/ipfs/');
+            console.log(i.tokenId);
 
-            let url = await fetch(tokenUri);
-            console.log(url);
+            let id = i.tokenId
+            let tokenUri = (await tokenContract.tokenURI(id)).replace('ipfs://', 'https://ipfs.io/ipfs/');
+            let resp;
 
 
-            let data = await url.json();
-            console.log(data);
-            console.log(typeof (data))
-            setNftData(data)
-            console.log(nftData);
+            let fetchNftsData = await axios.get(tokenUri);
+            setNftData(Object.values(fetchNftsData.data))
 
-            let img = data.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
-            console.log(img);
-            setImage(img);
-            let token = i.tokenId;
-            token = parseInt(token)
-            settokenId(token)
-            console.log(token);
-            let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-            price = parseInt(price)
-            console.log(price);
-            setprice(price)
+            if (fetchNftsData.status === 200) {
 
-            let metadata = {
-                name: data.name,
-                description: data.description,
-                image: img,
-                tokenId: token,
-                price: price
             }
 
-            let meta = JSON.stringify(metadata);
-            console.log(meta);
         })
 
 
 
-        setNfts(items);
-        console.log(items);
+
+        // const items = itemArray.map(async i => {
+        //     const tokenContractAddress = await i.nftContract;
+        //     const tokenContract = new ethers.Contract(tokenContractAddress, DemoMint.abi, signer);
+
+        //     const tokenUri = (await tokenContract.tokenURI(i.tokenId)).replace('ipfs://', 'https://ipfs.io/ipfs/');
+
+        //     let url = await fetch(tokenUri);
+        //     console.log(url);
+
+
+        //     let data = await url.json();
+        //     console.log(data);
+        //     console.log(typeof (data))
+        //     setNftData(data)
+        //     console.log(nftData);
+
+        //     let img = data.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
+        //     console.log(img);
+        //     setImage(img);
+        //     let token = i.tokenId;
+        //     token = parseInt(token)
+        //     settokenId(token)
+        //     console.log(token);
+        //     let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
+        //     price = parseInt(price)
+        //     console.log(price);
+        //     setprice(price)
+
+        //     let metadata = {
+        //         name: data.name,
+        //         description: data.description,
+        //         image: img,
+        //         tokenId: token,
+        //         price: price
+        //     }
+
+        //     let meta = JSON.stringify(metadata);
+        //     console.log(meta);
+        // })
+
+
+
+        // setNfts(items);
+        // console.log(items);
         setLoadingState('loaded');
 
     }
 
 
+    console.log(nftData);
 
 
 
@@ -199,19 +197,19 @@ const AddartCollectionss = ({ currentAccount }) => {
                 <section className="content">
                     <div className="container">
                         <div className="row">
-                            {nfts.length === 0 ? (<p className="text-white d-flex justy-content-center">No nfts to Display</p>) :
-                                (nfts.map((nft) => (
+                            {
+                                (nftData.map((nft) => (
                                     <div className="col-md-4 all-arts" align="center">
                                         <div className="img">
-                                            <img src={image} alt="" style={{ width: "300px", height: "400px" }} />
+                                            <img src={nftData[2]} alt="" style={{ width: "300px", height: "400px" }} />
                                         </div>
 
                                         <br />
                                         <div className="info text-light" align="center">
-                                            <p className="text-warning">Name: &nbsp; {nftData.name}</p>
+                                            <p className="text-warning">Name: &nbsp; {nftData[0]}</p>
                                             <p className="text-warning">Token Id: &nbsp; {tokenId}</p>
                                             <p className="text-warning">Price: &nbsp; {price}</p>
-                                            <p className="text-warning">Description: &nbsp; {nftData.description}</p>
+                                            <p className="text-warning">Description: &nbsp; {nftData[1]}</p>
                                             <br />
                                             <Button className="btn" style={{ borderRadius: "0px" }} >Buy Now</Button>
                                         </div>
